@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export default function Recipient() {
-  const [bank, setBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
 
   return (
