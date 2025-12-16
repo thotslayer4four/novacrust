@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-export default function Recipient() {
+export default function Recipient({ onBack }: { onBack?: () => void }) {
   const [accountNumber, setAccountNumber] = useState("");
 
   return (
     <div className="w-full max-w-md bg-white rounded-[32px] p-6 shadow-sm">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
-        <button className="text-xl">←</button>
+        <button onClick={onBack} className="text-xl">←</button>
         <h1 className="text-lg font-medium">Recipient details</h1>
       </div>
 

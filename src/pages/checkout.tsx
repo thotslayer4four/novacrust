@@ -1,10 +1,14 @@
 import { useMemo, useState } from "react";
+import celoLogo from "../../images/celo.png";
+import tonLogo from "../../images/ton logo.png";
+import bnbLogo from "../../images/bnb.png";
 
 type Token = {
   label: string;
   short: string;
   iconBg: string;
   iconText: string;
+  logo?: string;
 };
 
 type Wallet = {
@@ -13,7 +17,7 @@ type Wallet = {
   iconText: string;
 };
 
-export default function Checkout() {
+export default function Checkout({ onNext }: { onNext?: () => void }) {
   const tokens: Token[] = useMemo(
     () => [
       {
@@ -21,18 +25,21 @@ export default function Checkout() {
         short: "USDT",
         iconBg: "bg-[#f5f8d8]",
         iconText: "C",
+        logo: celoLogo,
       },
       {
         label: "USDT - TON",
         short: "USDT",
         iconBg: "bg-[#e5f2ff]",
         iconText: "T",
+        logo: tonLogo,
       },
       {
         label: "USDT - BNB",
         short: "USDT",
         iconBg: "bg-[#fff1d6]",
         iconText: "B",
+        logo: bnbLogo,
       },
     ],
     []
@@ -79,18 +86,22 @@ export default function Checkout() {
                 className="flex items-center gap-2 rounded-full border border-[#e3e7ea] bg-white px-4 py-2 text-sm font-semibold text-[#0f1d17] shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
                 onClick={() => setShowCryptoMenu((open) => !open)}
               >
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#eef1f3] text-xs font-bold text-[#0f1d17]">
-                  {cryptoOption.iconText}
-                </span>
+                {cryptoOption.logo ? (
+                  <img src={cryptoOption.logo} alt={cryptoOption.short} className="h-6 w-6 rounded-full object-cover" />
+                ) : (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#eef1f3] text-xs font-bold text-[#0f1d17]">
+                    {cryptoOption.iconText}
+                  </span>
+                )}
                 {cryptoOption.short}
                 <span className="text-[#6d7577]">v</span>
               </button>
 
               {showCryptoMenu && (
-                <div className="absolute left-1/2 top-[105%] w-64 -translate-x-1/2 rounded-2xl border border-[#e5e7eb] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.14)]">
+                <div className="absolute left-1/2 top-[105%] z-50 w-64 -translate-x-1/2 rounded-2xl border border-[#e5e7eb] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.14)]">
                   <div className="px-4 pb-2 pt-3">
                     <div className="flex items-center gap-2 rounded-full border border-[#e8eaec] px-3 py-2 text-sm text-[#7a8285]">
-                      <span className="text-xs font-semibold text-[#9aa0a3]">S</span>
+                      <span className="text-sm">🔍</span>
                       <span className="text-[#9aa0a3]">Search</span>
                     </div>
                   </div>
@@ -106,9 +117,13 @@ export default function Checkout() {
                           setShowCryptoMenu(false);
                         }}
                       >
-                        <span className={`flex h-10 w-10 items-center justify-center rounded-full text-base font-bold ${token.iconBg}`}>
-                          {token.iconText}
-                        </span>
+                        {token.logo ? (
+                          <img src={token.logo} alt={token.short} className="h-10 w-10 rounded-full object-cover" />
+                        ) : (
+                          <span className={`flex h-10 w-10 items-center justify-center rounded-full text-base font-bold ${token.iconBg}`}>
+                            {token.iconText}
+                          </span>
+                        )}
                         <span>{token.label}</span>
                       </button>
                     ))}
@@ -136,7 +151,7 @@ export default function Checkout() {
             </button>
 
             {showWalletMenu && (
-              <div className="absolute left-1/2 top-[102%] w-full -translate-x-1/2 rounded-3xl border border-[#e5e7eb] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.14)]">
+              <div className="absolute left-1/2 top-[102%] z-50 w-full -translate-x-1/2 rounded-3xl border border-[#e5e7eb] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.14)]">
                 <div className="divide-y divide-[#eef0f2]">
                   {wallets.map((wallet) => (
                     <button
@@ -171,6 +186,7 @@ export default function Checkout() {
       </div>
 
       <button
+        onClick={onNext}
         disabled={!payFromOption || !payTo.trim()}
         className={`mt-8 w-full rounded-full px-5 py-4 text-base font-semibold text-white shadow-[0_12px_30px_rgba(13,64,52,0.35)] ${
           payFromOption && payTo.trim() ? "bg-[#0d4034]" : "bg-[#cfd4d6]"
